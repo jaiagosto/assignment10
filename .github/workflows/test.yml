@@ -53,6 +53,7 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@db:5432/fastapi_db
         run: |
+          source venv/bin/activate
           # Run ALL tests together with coverage
           pytest tests/ --cov=app --cov-report=term-missing --cov-report=html --cov-fail-under=90 --junitxml=test-results/junit.xml
       
