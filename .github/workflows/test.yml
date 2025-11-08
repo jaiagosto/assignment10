@@ -49,27 +49,12 @@ jobs:
           pip install -r requirements.txt
           playwright install
           
-      - name: Run tests
+      - name: Run tests with coverage
         env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/mytestdb
+          DATABASE_URL: postgresql://postgres:postgres@db:5432/fastapi_db
         run: |
-          source venv/bin/activate
-          
-          # 1) Unit tests with coverage enforcement (fail if under 90%)
-          pytest tests/unit/ --cov=app --cov-report=term-missing --cov-report=html --cov-fail-under=90 --junitxml=test-results/junit.xml
-          
-          # 2) Integration tests
-          pytest tests/integration/ --cov=app --cov-append --cov-report=term-missing
-          
-          # 3) E2E tests
-          pytest tests/e2e/
-          
-          # 4) Auth tests
-          pytest tests/auth/ --cov=app --cov-append --cov-report=term-missing
-          
-          # Generate final coverage report
-          coverage report
-          coverage html
+          # Run ALL tests together with coverage
+          pytest tests/ --cov=app --cov-report=term-missing --cov-report=html --cov-fail-under=90 --junitxml=test-results/junit.xml
       
       - name: Upload coverage reports
         uses: actions/upload-artifact@v4
