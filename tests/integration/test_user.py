@@ -104,7 +104,7 @@ def test_create_user_with_faker(db_session):
     """
     Create a single user using Faker-generated data and verify it was saved.
     """
-    user_data = create_fake_user()
+    user_data = fake_user_data
     logger.info(f"Creating user with data: {user_data}")
     
     user = User(**user_data)
@@ -117,7 +117,7 @@ def test_create_user_with_faker(db_session):
     logger.info(f"Successfully created user with ID: {user.id}")
 
 
-def test_create_multiple_users(db_session):
+def test_create_multiple_users(db_session, create_fake_user):
     """
     Create multiple users in a loop and verify they are all saved.
     """
@@ -168,7 +168,7 @@ def test_transaction_rollback(db_session):
     initial_count = db_session.query(User).count()
     
     try:
-        user_data = create_fake_user()
+        user_data = fake_user_data
         user = User(**user_data)
         db_session.add(user)
         # Force an error to trigger rollback
@@ -205,7 +205,7 @@ def test_update_with_refresh(db_session, test_user):
 # ======================================================================================
 
 @pytest.mark.slow
-def test_bulk_operations(db_session):
+def test_bulk_operations(db_session, create_fake_user):
     """
     Test bulk inserting multiple users at once (marked slow).
     Use --run-slow to enable this test.
@@ -223,7 +223,7 @@ def test_bulk_operations(db_session):
 # Uniqueness Constraint Tests
 # ======================================================================================
 
-def test_unique_email_constraint(db_session):
+def test_unique_email_constraint(db_session, create_fake_user):
     """
     Create two users with the same email and expect an IntegrityError.
     """
@@ -246,12 +246,12 @@ def test_unique_username_constraint(db_session):
     """
     Create two users with the same username and expect an IntegrityError.
     """
-    first_user_data = create_fake_user()
+    first_user_data = fake_user_data
     first_user = User(**first_user_data)
     db_session.add(first_user)
     db_session.commit()
     
-    second_user_data = create_fake_user()
+    second_user_data = fake_user_data
     second_user_data["username"] = first_user_data["username"]  # Force a duplicate username
     second_user = User(**second_user_data)
     db_session.add(second_user)
