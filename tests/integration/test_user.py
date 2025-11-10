@@ -100,7 +100,7 @@ def test_session_handling(db_session):
 # User Creation Tests
 # ======================================================================================
 
-def test_create_user_with_faker(db_session):
+def test_create_user_with_faker(db_session, fake_user_data):
     """
     Create a single user using Faker-generated data and verify it was saved.
     """
@@ -242,7 +242,7 @@ def test_unique_email_constraint(db_session, create_fake_user):
     db_session.rollback()
 
 
-def test_unique_username_constraint(db_session):
+def test_unique_username_constraint(db_session, create_fake_user):
     """
     Create two users with the same username and expect an IntegrityError.
     """
