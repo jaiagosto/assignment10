@@ -158,7 +158,7 @@ def test_query_methods(db_session, seed_users):
 # Transaction / Rollback Tests
 # ======================================================================================
 
-def test_transaction_rollback(db_session):
+def test_transaction_rollback(db_session, fake_user_data):
     """
     Demonstrate how a partial transaction fails and triggers rollback.
     - We add a user and force an error
@@ -246,12 +246,12 @@ def test_unique_username_constraint(db_session, create_fake_user):
     """
     Create two users with the same username and expect an IntegrityError.
     """
-    first_user_data = fake_user_data
+    first_user_data = create_fake_user()
     first_user = User(**first_user_data)
     db_session.add(first_user)
     db_session.commit()
     
-    second_user_data = fake_user_data
+    second_user_data = create_fake_user()
     second_user_data["username"] = first_user_data["username"]  # Force a duplicate username
     second_user = User(**second_user_data)
     db_session.add(second_user)
